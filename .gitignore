@@ -1,5 +1,9 @@
+# Tmp files
+*.py[cod]
+__pycache__
+
 # Virtual env
 venv/
 
 # Private data
-*.csv
+qd_tickets_details.csv

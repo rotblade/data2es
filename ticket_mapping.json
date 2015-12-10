@@ -1,0 +1,24 @@
+{
+    "dynamic": "true",
+    "properties": {
+        "ticket_no": {"type": "string", "index": "not_analyzed"},
+        "status": {"type": "string"},
+        "workgroup": {"type": "string"},
+        "assignee": {"type": "string"},
+        "category": {"type": "string"},
+        "sub_category": {"type": "string"},
+        "impact": {"type": "string"},
+        "urgency": {"type": "string"},
+        "customer_upi": {"type": "string"},
+        "sla_status": {"type": "string"},
+        "source": {"type": "string"},
+        "building": {"type": "string"},
+        "location": {"type": "string"},
+        "create_time": {"type": "date"},
+        "close_time": {"type": "date"},
+        "create_by_group": {"type": "string"},
+        "create_by": {"type": "string"},
+        "close_by_group": {"type": "string"},
+        "close_by": {"type": "string"}
+    }
+}
