@@ -35,7 +35,7 @@ class TestTwoCsvFile(unittest.TestCase):
         dict_reader = csv.DictReader(self.doc_file, fields)
         self.assertEqual(next(dict_reader), dict_row)
 
-    def test_3_action(self):
+    def test_3_op(self):
         dict_action = {
             '_index': 'qd',
             '_type': 'ticket',

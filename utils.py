@@ -67,7 +67,7 @@ def index_op(doc, meta):
     return action
 
 
-def index_body(doc_type, mapping, setting=None):
+def index_body(doc_type, mapping=None, setting=None):
     """
     Return body that includes index seetings and mappings.
 
@@ -78,9 +78,10 @@ def index_body(doc_type, mapping, setting=None):
     body = {}
     if setting is not None:
         body['settings'] = setting
+    if mapping is not None:
+        d = {}
+        d[doc_type] = mapping
+        body['mappings'] = d
 
-    d = {}
-    d[doc_type] = mapping
-    body['mappings'] = d
     return body
 

@@ -5,8 +5,8 @@ from elasticsearch import Elasticsearch, helpers
 from utils import echo, get_fieldnames, index_op, index_body
 
 
-def docs_from_file(filename, idx_name, doc_type, id_field_idx=None,
-                   quiet=False):
+def docs_from_file(filename, idx_name, doc_type, id_field_idx,
+                   quiet):
     """
     Return a generator for pulling rows from a given delimited file.
 
@@ -27,13 +27,16 @@ def docs_from_file(filename, idx_name, doc_type, id_field_idx=None,
                 echo(field, quiet)
 
             dict_reader = csv.DictReader(doc_file, fieldnames=fields)
+            i = 0
             for row in dict_reader:
                 meta = {
                     'index': idx_name,
                     'type': doc_type,
                 }
                 if id_field_idx is not None:
-                    meta['id'] = row[fields[id_field_idx]]
+                    meta['id'] = row[fields[int(id_field_idx)]]
+                i += 1
+                echo('Sending item %s to ES ...' % i, quiet)
                 yield index_op(row, meta)
 
     return all_docs
@@ -59,9 +62,9 @@ def docs_from_file(filename, idx_name, doc_type, id_field_idx=None,
 def cli(host, index_name, doc_type, import_file, mapping_file,
         id_field_idx, delete_index, quiet):
     """
-    Bulk import a delimited file into a target Elasticsearch instance. Common
-    delimited files include things like CSV and TSV.
-    \b
+    Bulk import a delimited file into a target Elasticsearch instance.
+    Common delimited files include things like CSV.
+
     Load a CSV file:
     data2es --index-name myindex --doc-type mydoc --import-file test.csv
     """
@@ -74,21 +77,21 @@ def cli(host, index_name, doc_type, import_file, mapping_file,
             es.indices.delete(index=index_name)
             echo('Deleted: %s' % index_name, quiet)
         else:
-            echo('Index %s already exist' % index_name, quiet)
+            echo('Index %s already exist' % index_name, False)
             return
 
     echo('Using document type: %s' % doc_type, quiet)
+    body = {}
     if mapping_file:
         echo('Applying mapping from: %s' % mapping_file, quiet)
         with open(mapping_file) as f:
             mapping = json.loads(f.read())
         body = index_body(doc_type, mapping)
-        es.indices.create(index=index_name, body=body)
-    else:
-        es.indices.delete(index=index_name)
+    es.indices.create(index=index_name, body=body)
     echo('Create new index: %s' % index_name, quiet)
 
-    action_g = docs_from_file(index_name, doc_type, id_field_idx)
+    action_g = docs_from_file(import_file, index_name, doc_type,
+                              id_field_idx, quiet)
     helpers.bulk(es, action_g())
 
 
