@@ -1,78 +1,28 @@
-import re
 import csv
+import json
 import click
+from elasticsearch import Elasticsearch, helpers
+from utils import echo, get_fieldnames, index_op, index_body
 
 
-def echo(message, quiet):
-    """
-    Print the given message to standard out via click unless quiet is True.
-
-    :param message: the message to print out
-    :param quiet: don't print the message when this is True
-    """
-    if not quiet:
-        click.echo(message)
-
-
-def str_to_esfield(raw_str):
-    """
-    Return a string that meets the field name requirements in ES.
-
-    :param raw_str: the string to be converted
-    """
-    def f(c):
-        """
-        Remove all characters except alphabetic, space, hyphen
-        and underscore
-        """
-        if c.isalpha() or c in [' ', '-', '_']:
-            return c
-        else:
-            return ''
-
-    new_str = raw_str.strip()
-    new_str = ''.join(map(f, new_str))
-    # use one '_' to replace successive spaces or hyphenes
-    for i in [' ', '-']:
-        if i in new_str:
-            new_str = '_'.join(re.split(i+'+', new_str))
-
-    return new_str.lower()
-
-
-def index_op(doc, meta):
-    """
-    Return a document-indexing operation that can be passed to
-    'bulk' method.
-
-    :arg doc: A mapping of fields
-    :arg meta: A mapping of underscore-prefixed fields with special
-        meaning to ES, like ``_id`` and ``_type``
-    """
-    def underscore_keys(d):
-        """Return a dict with every key prefixed by an underscore."""
-        return dict(('_%s' % k, v) for k, v in d.items())
-
-    action = underscore_keys(meta)
-    action['_source'] = doc
-    return action
-
-
-def docs_from_file(filename, idx_name, doc_type, quiet):
+def docs_from_file(filename, idx_name, doc_type, id_field_idx=None,
+                   quiet=False):
     """
     Return a generator for pulling rows from a given delimited file.
 
-    :param filename: the name of the file to read from or '-' if stdin
+    :param filename: the name of the file to read from
     :param idx_name: index name
     :param doc_type: document type
+    :param doc_id: default to 'None', that means the id field will be
+        generated automatically by ES. If assigned here, it's a digital,
+        stands for positional index of fields list.
     :param quiet: don't output anything to the console when this is True
     """
     def all_docs():
         with open(filename, newline='') as doc_file:
-            reader_obj = csv.reader(doc_file)
-            # delimited file should include the field names as the first row
-            fields = [str_to_esfield(item) for item in next(reader_obj)]
-            echo('Using the following ' + str(len(fields)) + ' fields:', quiet)
+            fields = get_fieldnames(doc_file)
+            echo('Using the following ' + str(len(fields)) + ' fields:',
+                 quiet)
             for field in fields:
                 echo(field, quiet)
 
@@ -81,8 +31,9 @@ def docs_from_file(filename, idx_name, doc_type, quiet):
                 meta = {
                     'index': idx_name,
                     'type': doc_type,
-                    'id': row[fields[0]]
                 }
+                if id_field_idx is not None:
+                    meta['id'] = row[fields[id_field_idx]]
                 yield index_op(row, meta)
 
     return all_docs
@@ -99,12 +50,48 @@ def docs_from_file(filename, idx_name, doc_type, quiet):
               help='File to import (or \'-\' for stdin)')
 @click.option('--mapping-file', required=False,
               help='JSON mapping file for index')
-@click.option('--id-field', required=False,
-              help='String to be document\'s ID field')
+@click.option('--id-field-idx', required=False,
+              help='Which field to be document\'s ID field')
 @click.option('--delete-index', is_flag=True, required=False,
               help='Delete existing index if it exists')
-@click.option('--delimiter', required=False,
-              help='The field delimiter to use, defaults to CSV')
+@click.option('--quiet', is_flag=True, required=False,
+              help='Minimize console output')
 def cli(host, index_name, doc_type, import_file, mapping_file,
-        id_field, delete_index, delimiter):
-    pass
+        id_field_idx, delete_index, quiet):
+    """
+    Bulk import a delimited file into a target Elasticsearch instance. Common
+    delimited files include things like CSV and TSV.
+    \b
+    Load a CSV file:
+    data2es --index-name myindex --doc-type mydoc --import-file test.csv
+    """
+
+    echo('Using host: %s' % host, quiet)
+    es = Elasticsearch(hosts=[host])
+
+    if es.indices.exists(index_name):
+        if delete_index:
+            es.indices.delete(index=index_name)
+            echo('Deleted: %s' % index_name, quiet)
+        else:
+            echo('Index %s already exist' % index_name, quiet)
+            return
+
+    echo('Using document type: %s' % doc_type, quiet)
+    if mapping_file:
+        echo('Applying mapping from: %s' % mapping_file, quiet)
+        with open(mapping_file) as f:
+            mapping = json.loads(f.read())
+        body = index_body(doc_type, mapping)
+        es.indices.create(index=index_name, body=body)
+    else:
+        es.indices.delete(index=index_name)
+    echo('Create new index: %s' % index_name, quiet)
+
+    action_g = docs_from_file(index_name, doc_type, id_field_idx)
+    helpers.bulk(es, action_g())
+
+
+if __name__ == "__main__":
+    cli()
+

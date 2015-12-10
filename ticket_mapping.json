@@ -1,7 +1,6 @@
 {
-    "dynamic": "true",
     "properties": {
-        "ticket_no": {"type": "string", "index": "not_analyzed"},
+        "ticket_no": {"type": "string"},
         "status": {"type": "string"},
         "workgroup": {"type": "string"},
         "assignee": {"type": "string"},

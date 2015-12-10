@@ -1,0 +1,8 @@
+{
+    "properties": {
+        "ticket_no": {"type": "integer"},
+        "name": {"type": "string"},
+        "work_title": {"type": "string"},
+        "job_desc": {"type": "string"}
+    }
+}

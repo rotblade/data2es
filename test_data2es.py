@@ -1,11 +1,12 @@
 import csv
+import json
 import unittest
-from data2es import str_to_esfield, index_op
+from utils import str_to_esfield, get_fieldnames, index_op, index_body
 
 
 class TestOneStringFun(unittest.TestCase):
     def test_1_strconvert(self):
-        self.assertEqual(str_to_esfield('This is  a-test--string.!'),
+        self.assertEqual(str_to_esfield('This is  a--testString.!'),
                          'this_is_a_test_string')
 
 
@@ -17,23 +18,20 @@ class TestTwoCsvFile(unittest.TestCase):
         self.doc_file.close()
 
 
-    def test_1_header(self):
-        header = ['ticketno', 'name', 'work_title', 'job_desc']
-        reader_obj = csv.reader(self.doc_file)
-        # delimited file should include the field names as the first row
-        fields = [str_to_esfield(item) for item in next(reader_obj)]
+    def test_1_fieldnames(self):
+        fieldnames = ['ticket_no', 'name', 'work_title', 'job_desc']
+        fields = get_fieldnames(self.doc_file)
         self.assertEqual(len(fields), 4)
-        self.assertEqual(fields, header)
+        self.assertEqual(fields, fieldnames)
 
     def test_2_row(self):
         dict_row = {
-            'ticketno': '10002',
+            'ticket_no': '10002',
             'name': 'Zhang Gavin',
             'job_desc': 'aaaa_',
             'work_title': 'supervisor'
         }
-        reader_obj = csv.reader(self.doc_file)
-        fields = [str_to_esfield(item) for item in next(reader_obj)]
+        fields = get_fieldnames(self.doc_file)
         dict_reader = csv.DictReader(self.doc_file, fields)
         self.assertEqual(next(dict_reader), dict_row)
 
@@ -43,14 +41,13 @@ class TestTwoCsvFile(unittest.TestCase):
             '_type': 'ticket',
             '_id': '10002',
             '_source': {
-                'ticketno': '10002',
+                'ticket_no': '10002',
                 'name': 'Zhang Gavin',
                 'job_desc': 'aaaa_',
                 'work_title': 'supervisor'
             }
         }
-        reader_obj = csv.reader(self.doc_file)
-        fields = [str_to_esfield(item) for item in next(reader_obj)]
+        fields = get_fieldnames(self.doc_file)
         dict_reader = csv.DictReader(self.doc_file, fields)
         row = next(dict_reader)
         meta = {
@@ -59,6 +56,25 @@ class TestTwoCsvFile(unittest.TestCase):
             'id': row[fields[0]]
         }
         self.assertEqual(index_op(row, meta), dict_action)
+
+    def test_4_body(self):
+        d = {
+            'properties': {
+                'ticket_no': {'type': 'integer'},
+                'name': {'type': 'string'},
+                'work_title': {'type': 'string'},
+                'job_desc': {'type': 'string'}
+            }
+        }
+        body = {
+            'mappings': {
+                'ticket': d
+            }
+        }
+        with open('test.json') as f:
+            mapping = json.loads(f.read())
+        self.assertEqual(index_body('ticket', mapping), body)
+
 
 if __name__ == '__main__':
     unittest.main()
