@@ -17,15 +17,28 @@ def echo(message, quiet):
 def str_to_esfield(raw_str):
     '''
     Return a string that meets the field name requirements in ES.
-    step1: remove all non-alpha characters
-    step2: use '_' to join individual words
-    step3: converting all characters to lowercase.
 
     :param raw_str: the string to be converted
     '''
-    alpha_str = ''.join(map(lambda x: x if x.isalpha() else '', raw_str))
-    delimited_str = '_'.join(re.findall('[a-zA-Z][a-z]+', alpha_str))
-    return delimited_str.lower()
+    def f(c):
+        '''
+        Remove all characters except alphabetic, space, hyphen
+        and underscore
+        '''
+        if c.isalpha() or c in [' ', '-', '_']:
+            return c
+        else:
+            return ''
+
+    new_str = raw_str.strip()
+    new_str = ''.join(map(f, new_str))
+
+    # use one '_' to replace successive spaces or hyphenes
+    for i in [' ', '-']:
+        if i in new_str:
+            new_str = '_'.join(re.split(i+'+', new_str))
+
+    return new_str.lower()
 
 
 def docs_from_file(es, filename, delimiter, quiet):
@@ -45,6 +58,8 @@ def docs_from_file(es, filename, delimiter, quiet):
             echo('Using the following ' + str(len(fields)) + ' fields:', quiet)
             for field in fields:
                 echo(field, quiet)
+
+            dict_reader = csv.DictReader(doc_file, fields)
 
     return all_docs
 
