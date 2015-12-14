@@ -2,7 +2,7 @@ import csv
 import json
 import click
 from elasticsearch import Elasticsearch, helpers
-from utils import echo, get_fieldnames, index_op, index_body
+from utils import echo, get_fieldnames, index_op
 
 
 def docs_from_file(filename, idx_name, doc_type, id_field_idx,
@@ -73,22 +73,22 @@ def cli(host, index_name, doc_type, import_file, mapping_file,
     es = Elasticsearch(hosts=[host])
 
     if es.indices.exists(index_name):
+        echo('Index %s already exist' % index_name, False)
         if delete_index:
             es.indices.delete(index=index_name)
             echo('Deleted: %s' % index_name, quiet)
-        else:
-            echo('Index %s already exist' % index_name, False)
-            return
+            es.indices.create(index=index_name)
+            echo('Created new index: %s' % index_name, quiet)
+    else:
+        es.indices.create(index=index_name)
+        echo('Created new index: %s' % index_name, quiet)
 
     echo('Using document type: %s' % doc_type, quiet)
-    body = {}
     if mapping_file:
         echo('Applying mapping from: %s' % mapping_file, quiet)
         with open(mapping_file) as f:
             mapping = json.loads(f.read())
-        body = index_body(doc_type, mapping)
-    es.indices.create(index=index_name, body=body)
-    echo('Create new index: %s' % index_name, quiet)
+        es.indices.put_mapping(doc_type, mapping, [index_name,])
 
     action_g = docs_from_file(import_file, index_name, doc_type,
                               id_field_idx, quiet)

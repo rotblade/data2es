@@ -1,0 +1,10 @@
+{
+    "properties": {
+        "group_name": {"type": "string"},
+        "gti_experience_count": {"type": "integer"},
+        "avg_experience": {
+            "type": "date",
+            "format": "hour_minute_second"
+        }
+    }
+}

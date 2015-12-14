@@ -7,3 +7,4 @@ venv/
 
 # Private data
 qd_tickets_details.csv
+response.csv
