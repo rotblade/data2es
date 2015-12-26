@@ -4,8 +4,9 @@
             "type": "string",
             "index" : "not_analyzed"
         },
-        "gti_experience_count": {"type": "integer"},
-        "avg_experience": {
+        "total_closed_count": {"type": "integer"},
+        "normal_closed_count": {"type": "integer"},
+        "gtr": {
             "type": "date",
             "format": "hour_minute_second"
         },

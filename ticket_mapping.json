@@ -1,31 +1,85 @@
 {
     "properties": {
-        "ticket_no": {"type": "string"},
-        "status": {"type": "string"},
-        "workgroup": {"type": "string"},
-        "assignee": {"type": "string"},
-        "category": {"type": "string"},
-        "sub_category": {"type": "string"},
-        "impact": {"type": "string"},
-        "urgency": {"type": "string"},
-        "customer_upi": {"type": "string"},
-        "sla_status": {"type": "string"},
-        "source": {"type": "string"},
-        "building": {"type": "string"},
-        "location": {"type": "string"},
+        "ticket_no": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "status": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "description": {
+            "type": "string"
+        },
+        "workgroup": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "assginee": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "category": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "sub_category": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "impact": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "urgency": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "customer_upi": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "sla_status": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "source": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "building": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "location": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
         "create_time": {
             "type": "date",
-            "format": "MM/DD/YYYY HH:mm:ss a",
+            "format": "MM/dd/yyyy HH:mm:ss a",
             "ignore_malformed": true
         },
         "close_time": {
             "type": "date",
-            "format": "MM/DD/YYYY HH:mm:ss a",
+            "format": "MM/dd/yyyy HH:mm:ss a",
             "ignore_malformed": true
         },
-        "create_by_group": {"type": "string"},
-        "create_by": {"type": "string"},
-        "close_by_group": {"type": "string"},
-        "close_by": {"type": "string"}
+        "create_by_group": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "create_by": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "close_by_group": {
+            "type": "string",
+            "index" : "not_analyzed"
+        },
+        "close_by": {
+            "type": "string",
+            "index" : "not_analyzed"
+        }
     }
 }
