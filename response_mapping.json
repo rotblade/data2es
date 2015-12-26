@@ -6,8 +6,8 @@
         },
         "gti_experience_count": {"type": "integer"},
         "avg_experience": {
-            "type": "date",
-            "format": "hour_minute_second"
+            "type": "string",
+            "index" : "not_analyzed"
         },
         "date": {
             "type": "date",

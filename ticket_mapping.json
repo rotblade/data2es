@@ -57,12 +57,12 @@
         },
         "create_time": {
             "type": "date",
-            "format": "MM/dd/yyyy HH:mm:ss a",
+            "format": "M/d/yyyy hh:mm:ss a",
             "ignore_malformed": true
         },
         "close_time": {
             "type": "date",
-            "format": "MM/dd/yyyy HH:mm:ss a",
+            "format": "M/d/yyyy hh:mm:ss a",
             "ignore_malformed": true
         },
         "create_by_group": {
