@@ -2,7 +2,7 @@ import csv
 import json
 import click
 from elasticsearch import Elasticsearch, helpers
-from utils import echo, get_fieldnames, index_op
+from utils import echo, isperiod, t2i, get_fieldnames, index_op
 
 
 def docs_from_file(filename, idx_name, doc_type, id_field_idx,
@@ -29,12 +29,17 @@ def docs_from_file(filename, idx_name, doc_type, id_field_idx,
             dict_reader = csv.DictReader(doc_file, fieldnames=fields)
             i = 0
             for row in dict_reader:
+                # Prepare meta info for each indexed document.
                 meta = {
                     'index': idx_name,
                     'type': doc_type,
                 }
                 if id_field_idx is not None:
                     meta['id'] = row[fields[int(id_field_idx)]]
+                # Convert tim inteval to an integer in minutes.
+                for k, v in row.items():
+                    if isinstance(v, str) and isperiod(v):
+                        row[k] = t2i(v)
                 i += 1
                 echo('Sending item %s to ES ...' % i, quiet)
                 yield index_op(row, meta)
@@ -59,6 +64,8 @@ def docs_from_file(filename, idx_name, doc_type, id_field_idx,
               help='Delete existing index if it exists')
 @click.option('--quiet', is_flag=True, required=False,
               help='Minimize console output')
+
+
 def cli(host, index_name, doc_type, import_file, mapping_file,
         id_field_idx, delete_index, quiet):
     """

@@ -5,13 +5,42 @@ import click
 
 def echo(message, quiet):
     """
-    Print the given message to standard out via click unless quiet is True.
+    Print the given message to standard out via click
+    unless quiet is True.
 
     :param message: the message to print out
     :param quiet: don't print the message when this is True
     """
     if not quiet:
         click.echo(message)
+
+def isperiod(t_str):
+    """
+    Return true if t_str only includes digit and ':',
+    false otherwise.
+
+    :param t_str: the string to be tested
+    """
+    if t_str:
+        l = t_str.split(':')
+        if len(l) > 1 and ''.join(l).isdigit():
+            return True
+        return False
+    else:
+        return False
+
+
+def t2i(t_str):
+    """
+    Return a integer that represents time inteval in minutes.
+
+    :param t_str: the string to be converted
+    """
+    hms = t_str.split(':')
+    decade = int(hms[0]) if hms[0].isdigit() else 0
+    unit =int(hms[1]) if hms[1].isdigit() else 0
+    i_time = decade * 60 + unit
+    return i_time
 
 
 def str_to_esfield(raw_str):

@@ -1,13 +1,23 @@
 import csv
 import json
 import unittest
-from utils import str_to_esfield, get_fieldnames, index_op, index_body
+from utils import str_to_esfield, t2i, get_fieldnames, \
+    isperiod, index_op, index_body
 
 
-class TestOneStringFun(unittest.TestCase):
+class TestOneGeneralFunc(unittest.TestCase):
     def test_1_strconvert(self):
         self.assertEqual(str_to_esfield('This is  a--testString.!'),
                          'this_is_a_test_string')
+    def test_2_time2integer(self):
+        self.assertEqual(t2i('03:30:18'), 210)
+
+    def test_3_istimeintev(self):
+        self.assertTrue(isperiod('03:30:18'))
+        self.assertFalse(isperiod('03:30:18x'))
+        self.assertFalse(isperiod(''))
+        self.assertFalse(isperiod('160'))
+        self.assertFalse(isperiod(':'))
 
 
 class TestTwoCsvFile(unittest.TestCase):

@@ -80,6 +80,9 @@
         "close_by": {
             "type": "string",
             "index" : "not_analyzed"
+        },
+        "resolution": {
+            "type": "string"
         }
     }
 }
