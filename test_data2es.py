@@ -2,7 +2,7 @@ import csv
 import json
 import unittest
 from utils import str_to_esfield, t2i, get_fieldnames, \
-    isperiod, index_op, index_body
+    isperiod, time_interval, index_op, index_body
 
 
 class TestOneGeneralFunc(unittest.TestCase):
@@ -18,6 +18,15 @@ class TestOneGeneralFunc(unittest.TestCase):
         self.assertFalse(isperiod(''))
         self.assertFalse(isperiod('160'))
         self.assertFalse(isperiod(':'))
+
+    def test_4_timeinterval(self):
+        self.assertEqual(time_interval('1/17/2016 03:30:15 AM',
+                                       '1/17/2016 03:31:45 AM',
+                                       '%m/%d/%Y %I:%M:%S %p'), 90.0)
+        self.assertEqual(time_interval('1/17/2016 03:30:15 AM',
+                                       '1/17/2016 03:31:45 PM',
+                                       '%m/%d/%Y %I:%M:%S %p'), 43290.0)
+
 
 
 class TestTwoCsvFile(unittest.TestCase):

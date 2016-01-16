@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 import csv
 import click
@@ -41,6 +42,17 @@ def t2i(t_str):
     unit =int(hms[1]) if hms[1].isdigit() else 0
     i_time = decade * 60 + unit
     return i_time
+
+
+def time_interval(start, end, fmt_s):
+    """
+    Return a integer that represents time inteval between 'start' and
+    'end' in second.
+
+    :param t_str: the string to be converted
+    """
+    interval = datetime.strptime(end, fmt_s) - datetime.strptime(start, fmt_s)
+    return interval.total_seconds()
 
 
 def str_to_esfield(raw_str):
