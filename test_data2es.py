@@ -22,10 +22,13 @@ class TestOneGeneralFunc(unittest.TestCase):
     def test_4_timeinterval(self):
         self.assertEqual(time_interval('1/17/2016 03:30:15 AM',
                                        '1/17/2016 03:31:45 AM',
-                                       '%m/%d/%Y %I:%M:%S %p'), 90.0)
+                                       '%m/%d/%Y %I:%M:%S %p'), 1.5)
         self.assertEqual(time_interval('1/17/2016 03:30:15 AM',
                                        '1/17/2016 03:31:45 PM',
-                                       '%m/%d/%Y %I:%M:%S %p'), 43290.0)
+                                       '%m/%d/%Y %I:%M:%S %p'), 721.5)
+        self.assertEqual(time_interval('1/aa/2016 03:30:15 AM',
+                                       '',
+                                       '%m/%d/%Y %I:%M:%S %p'), 0.0)
 
 
 

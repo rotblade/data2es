@@ -2,7 +2,7 @@ import csv
 import json
 import click
 from elasticsearch import Elasticsearch, helpers
-from utils import echo, isperiod, t2i, get_fieldnames, index_op
+from utils import echo, isperiod, t2i, get_fieldnames, time_interval, index_op
 
 
 def docs_from_file(filename, idx_name, doc_type, id_field_idx,
@@ -21,12 +21,15 @@ def docs_from_file(filename, idx_name, doc_type, id_field_idx,
     def all_docs():
         with open(filename, newline='') as doc_file:
             fields = get_fieldnames(doc_file)
+            dict_reader = csv.DictReader(doc_file, fieldnames=fields)
+            if 'ticket' in doc_type:
+                fields.append("ticket_time")
+
             echo('Using the following ' + str(len(fields)) + ' fields:',
                  quiet)
             for field in fields:
                 echo(field, quiet)
 
-            dict_reader = csv.DictReader(doc_file, fieldnames=fields)
             i = 0
             for row in dict_reader:
                 # Prepare meta info for each indexed document.
@@ -40,6 +43,10 @@ def docs_from_file(filename, idx_name, doc_type, id_field_idx,
                 for k, v in row.items():
                     if isinstance(v, str) and isperiod(v):
                         row[k] = t2i(v)
+                if 'ticket' in doc_type:
+                    row['ticket_time'] = time_interval(row['create_time'],
+                                                       row['close_time'],
+                                                       '%m/%d/%Y %I:%M:%S %p')
                 i += 1
                 echo('Sending item %s to ES ...' % i, quiet)
                 yield index_op(row, meta)

@@ -9,7 +9,16 @@
             "index" : "not_analyzed"
         },
         "description": {
-            "type": "string"
+            "type": "string",
+            "analyzer": "english",
+            "fields": {
+                "cn": {
+                     "type": "string",
+                     "term_vector": "with_positions_offsets",
+                     "analyzer": "mmseg_maxword",
+                     "search_analyzer": "mmseg_maxword"
+                }
+            }
         },
         "workgroup": {
             "type": "string",
@@ -82,7 +91,19 @@
             "index" : "not_analyzed"
         },
         "resolution": {
-            "type": "string"
+            "type": "string",
+            "analyzer": "english",
+            "fields": {
+                "cn": {
+                     "type": "string",
+                     "term_vector": "with_positions_offsets",
+                     "analyzer": "mmseg_maxword",
+                     "search_analyzer": "mmseg_maxword"
+                }
+            }
+        },
+        "ticket_time": {
+             "type": "float"
         }
     }
 }
