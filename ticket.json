@@ -103,7 +103,7 @@
             }
         },
         "ticket_time": {
-             "type": "float"
+             "type": "integer"
         }
     }
 }

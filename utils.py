@@ -54,9 +54,9 @@ def time_interval(start, end, fmt_s):
     try:
         interval = datetime.strptime(end, fmt_s) - datetime.strptime(start, fmt_s)
     except ValueError:
-        return 0.0
+        return 0
 
-    return interval.total_seconds()/60
+    return int(interval.total_seconds()/60)
 
 
 def str_to_esfield(raw_str):
