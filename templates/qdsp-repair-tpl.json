@@ -1,0 +1,33 @@
+{
+  "template":   "qdsp-repair-*", 
+  "order": 1,
+  "mappings": {
+    "repair": {
+      "properties": {
+        "num": { "type": "long" },
+        "price": { "type": "long" },
+        "total_price": { "type": "long" },
+        "finished_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd Z",
+          "ignore_malformed": true
+        },
+        "request_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd Z",
+          "ignore_malformed": true
+        },
+        "failed_part": {
+          "type": "text",
+          "search_analyzer": "ik_smart",
+          "analyzer": "ik_smart"
+        },
+        "description": {
+          "type": "text",
+          "search_analyzer": "ik_smart",
+          "analyzer": "ik_smart"
+        }
+      }
+    }
+  }
+}

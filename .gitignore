@@ -7,4 +7,4 @@ venv/
 
 # Private data
 *.csv
-data_archive/
+archive/

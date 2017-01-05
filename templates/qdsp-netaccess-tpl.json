@@ -1,0 +1,15 @@
+{
+  "template":   "qdsp-netaccess-*", 
+  "order": 1,
+  "mappings": {
+    "netaccess": {
+      "properties": {
+        "request_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd Z",
+          "ignore_malformed": true
+        }
+      }
+    }
+  }
+}

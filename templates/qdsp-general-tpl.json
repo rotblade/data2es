@@ -1,0 +1,15 @@
+{
+  "template":   "qdsp-general-*", 
+  "order": 1,
+  "mappings": {
+    "general": {
+      "properties": {
+        "date": {
+          "type": "date",
+          "format": "yyyy/M/d Z"
+        },
+        "num": { "type": "long" }
+      }
+    }
+  }
+}

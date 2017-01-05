@@ -1,0 +1,18 @@
+{
+  "template":   "qdsp-reponse-*", 
+  "order": 0,
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "gti_experience_count": {"type": "long"},
+        "avg_experience": {
+          "type": "long"
+        },
+        "date": {
+          "type": "date",
+          "format": "yyyy-MM-dd Z"
+        }
+      }
+    }
+  }
+}

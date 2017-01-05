@@ -1,0 +1,27 @@
+{
+  "template":   "qdsp-summary-*", 
+  "order": 1,
+  "mappings": {
+    "amount": {
+      "properties": {
+        "total_closed_count": {"type": "long"},
+        "normal_closed_count": {"type": "long"},
+        "gtr": { "type": "long" },
+        "date": {
+          "type": "date",
+          "format": "yyyy-MM-dd Z"
+        }
+      }
+    },
+    "response": {
+      "properties": {
+        "gti_experience_count": {"type": "long"},
+        "avg_experience": { "type": "long" },
+        "date": {
+          "type": "date",
+          "format": "yyyy-MM-dd Z"
+        }
+      }
+    }
+  }
+}

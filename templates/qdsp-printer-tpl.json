@@ -1,0 +1,16 @@
+{
+  "template":   "qdsp-printer-*", 
+  "order": 1,
+  "mappings": {
+    "printer": {
+      "properties": {
+        "num_black": { "type": "long" },
+        "num_color": { "type": "long" },
+        "date": {
+          "type": "date",
+          "format": "yyyy/M/d Z"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "template": "db-erimsrsm*",
+  "order": 1,
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "repairdesc": {
+            "index": "analyzed",
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "type": "text"
+        }
+      }
+    }
+  }
+}

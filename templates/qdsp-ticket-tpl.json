@@ -1,0 +1,43 @@
+{
+  "template":   "qdsp-ticket-*", 
+  "order": 1,
+  "mappings": {
+    "ticket": {
+      "properties": {
+        "ticket_time": { "type": "long" },
+        "create_time": {
+          "type": "date",
+          "format": "M/d/yyyy hh:mm:ss a Z",
+          "ignore_malformed": true
+        },
+        "close_time": {
+          "type": "date",
+          "format": "M/d/yyyy hh:mm:ss a Z",
+          "ignore_malformed": true
+        },
+        "description": {
+          "type": "text",
+          "analyzer": "english",
+          "fields": {
+            "cn": {
+               "type": "text",
+               "search_analyzer": "ik_smart",
+               "analyzer": "ik_smart"
+            }
+          }
+        },
+        "resolution": {
+          "type": "text",
+          "analyzer": "english",
+          "fields": {
+            "cn": {
+               "type": "text",
+               "search_analyzer": "ik_smart",
+               "analyzer": "ik_smart"
+            }
+          }
+        }
+      }
+    }
+  }
+}

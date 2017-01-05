@@ -1,0 +1,23 @@
+{
+  "template":   "qdsp-part-*", 
+  "order": 1,
+  "mappings": {
+    "part": {
+      "properties": {
+        "num": { "type": "long" },
+        "price": { "type": "long" },
+        "total_price": { "type": "long" },
+        "finished_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss Z",
+          "ignore_malformed": true
+        },
+        "part": {
+          "type": "text",
+          "search_analyzer": "ik_smart",
+          "analyzer": "ik_smart"
+        }
+      }
+    }
+  }
+}

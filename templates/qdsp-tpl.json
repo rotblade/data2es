@@ -1,0 +1,25 @@
+{
+  "template":   "qdsp-*", 
+  "order": 0,
+  "settings": { 
+    "index.refresh_interval" : "60s",
+    "number_of_shards": 1 
+  }, 
+  "mappings": {
+    "_default_": {
+      "_all": { 
+        "enabled": false
+      },
+      "dynamic_templates": [
+        {
+          "strings": { 
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

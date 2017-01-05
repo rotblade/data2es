@@ -1,0 +1,40 @@
+{
+  "template": "db-erimscim*",
+  "order": 1,
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "customername": {
+          "index": "analyzed",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart",
+          "type": "text"
+        },
+        "really_cust_name": {
+          "index": "analyzed",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart",
+          "type": "string"
+        },
+        "postaddress": {
+          "index": "analyzed",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart",
+          "type": "string"
+        },
+        "failure_description": {
+          "index": "analyzed",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart",
+          "type": "string"
+        },
+        "return_address": {
+          "index": "analyzed",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart",
+          "type": "string"
+        }
+      }
+    }
+  }
+}
